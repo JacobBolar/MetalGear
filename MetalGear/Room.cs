@@ -31,10 +31,8 @@ namespace MetalGear
         {
             exits = new Dictionary<string, Door>();
             items = new Dictionary<string, IItem>();
-            //chest = new ItemContainer("chest");
+            chest = new ItemContainer("chest");
             this.Tag = tag;
-
-           
         }
 
         public void SetExit(string exitName, Door door)
@@ -100,9 +98,6 @@ namespace MetalGear
             {
                 return null;
             }
-
         }
-        
-
     }
 }

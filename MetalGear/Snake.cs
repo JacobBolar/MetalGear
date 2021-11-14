@@ -8,7 +8,7 @@ namespace MetalGear
     {
         private Room _currentRoom = null;
         private float maxWeight = 50;
-        private int playerValue = 0;
+        private int snakeValue = 0;
         //private CareTaker careTaker;
         private Dictionary<string, IItem> inventory;
         public Dictionary<string, IItem> Inventory
@@ -39,7 +39,7 @@ namespace MetalGear
 
         }
 
-        public void WalkTo(string direction) //Player walks to room
+        public void WalkTo(string direction) //snake walks to room
         {
 
             Door door = _currentRoom.GetExit(direction); //gets exit direction door 
@@ -53,18 +53,16 @@ namespace MetalGear
                 else
                 {
                     //careTaker.add(saveStateToMomento()); // add current room into caretaker class stack
-                    Notification playerLeavingRoom = new Notification("PlayerLeavingRoom", this);
-                    NotificationCenter.Instance.PostNotification(playerLeavingRoom); // post notification to notification center
+                    Notification snakeLeavingRoom = new Notification("snakeLeavingRoom", this);
+                    NotificationCenter.Instance.PostNotification(snakeLeavingRoom); // post notification to notification center
                     Room nextRoom = door.getOtherSideRoom(CurrentRoom);  // assign other side of door to next room
                     CurrentRoom = door.getOtherSideRoom(CurrentRoom);
                     this._currentRoom = nextRoom;
-                    Notification playerEnteredRoom = new Notification("PlayerEnteredRoom", this);
-                    NotificationCenter.Instance.PostNotification(playerEnteredRoom);
+                    Notification snakeEnteredRoom = new Notification("snakeEnteredRoom", this);
+                    NotificationCenter.Instance.PostNotification(snakeEnteredRoom);
                     this.OutputMessage("\n" + this._currentRoom.Description());
                     Console.WriteLine("Items in room: " + _currentRoom.displayItems());
                 }
-
-
             }
             else
             {
@@ -92,14 +90,14 @@ namespace MetalGear
         //
         // }
 
-        public void back() // back command 
+        public void Back() // back command 
         {
             //getStateFromMomento(careTaker.Get());//get last state that was saved and assign to current room
             Room room = CurrentRoom;
             if (room != null)
             {
                 _currentRoom = room;
-                Notification notification = new Notification("PlayerWentBack", this);
+                Notification notification = new Notification("snakeWentBack", this);
                 NotificationCenter.Instance.PostNotification(notification);
                 this.OutputMessage("\n" + this._currentRoom.Description());
                 Console.WriteLine("Items in room: " + _currentRoom.displayItems());
@@ -118,7 +116,7 @@ namespace MetalGear
         }
 
 
-        public void pickup(string item) //player picksup item
+        public void Pickup(string item) //snake picksup item
         {
             IItem a = null;
             IItem i2 = CurrentRoom.chest.RemoveItem(item);
@@ -126,7 +124,7 @@ namespace MetalGear
             {
                 if (maxWeight - i2.weight > 0) //checks if item can be picked up and is less than weight
                 {
-                    Notification notification = new Notification("PlayerPickedUpItem", this);
+                    Notification notification = new Notification("snakePickedUpItem", this);
                     NotificationCenter.Instance.PostNotification(notification);
                     inventory.Add(i2.name, i2);
                     maxWeight = maxWeight - i2.weight;
@@ -144,66 +142,60 @@ namespace MetalGear
         }
 
 
-        public void drop(string item) //player drops item
+        /*public void drop(string item) //snake drops item
         {
             if (inventory.ContainsKey(item)) //check if item is in inventory 
             {
                 IItem i;
                 inventory.TryGetValue(item, out i);
                 inventory.Remove(item);
-                Notification notification = new Notification("PlayerDroppedItem", this);
+                Notification notification = new Notification("snakeDroppedItem", this);
                 NotificationCenter.Instance.PostNotification(notification);
-                maxWeight = maxWeight + i.weight; //return weight back to player
+                maxWeight = maxWeight + i.weight; //return weight back to snake
                 CurrentRoom.chest.AddItem(i);
             }
             else
             {
                 Console.WriteLine("Item not in inventory");
             }
-        }
+        }*/
 
 
 
-        public void breakIce(String item) { //breaks ice in trap room
+        // public void breakIce(String item) { //breaks ice in trap room
+        //
+        //     if (inventory.ContainsKey("icepick") && item == "ice") {
+        //
+        //         //CurrentRoom.removeItem(item);
+        //         Notification notification = new Notification("snakeBrokeIce", this);
+        //         NotificationCenter.Instance.PostNotification(notification);
+        //     }
+        // }
 
-            if (inventory.ContainsKey("icepick") && item == "ice") {
-
-                //CurrentRoom.removeItem(item);
-                Notification notification = new Notification("PlayerBrokeIce", this);
-                NotificationCenter.Instance.PostNotification(notification);
-            }
-        }
 
 
-
-        public void unlock(String direction) // tries to unlock door 
+        public void Unlock(String direction) // tries to unlock door 
         {
             Door door = this._currentRoom.GetExit(direction); //gets exit direction door
             String name = door.getOtherSideRoom(CurrentRoom).Tag;
 
             if (door.isLocked)
             {
-                if (inventory.ContainsKey(name + "Key"))
+                if (inventory.ContainsKey("bigBossKey"))
                 {
-
                     door.isLocked = false;
-                    Notification notification = new Notification("PlayerUnlockedDoor", this);
+                    Notification notification = new Notification("snakeUnlockedDoor", this);
                     NotificationCenter.Instance.PostNotification(notification);
                 }
                 else
                 {
-                    Console.WriteLine("Must obtain key to lock door");
+                    Militant.Instance.SpeakDeny();
                 }
             }
-            else
-            {
-                Console.WriteLine("Door is unlocked");
-            }
-
         }
 
 
-        public void inspect(String item) //inspect item
+        public void Inspect(String item) //inspect item
         {
             IItem I;
             Console.WriteLine(CurrentRoom.chest.Description);
@@ -216,7 +208,7 @@ namespace MetalGear
             {
                 IItem i;
                 inventory.TryGetValue(item, out i);
-                playerValue += i.value; //increase playervalue
+                snakeValue += i.value; //increase snakevalue
                 inventory.Remove(item); //remove from inventory
                 CurrentRoom.chest.AddItem(i); //add item to room chest
                 maxWeight += i.weight; // add weight back to inventory
@@ -230,7 +222,7 @@ namespace MetalGear
 
         }
 
-        public void Buy(string item) //player buys items from 
+        public void Buy(string item) //snake buys items from 
         {
             if (CurrentRoom.Tag == "Trade Room") // checks if current room
             {
@@ -238,13 +230,13 @@ namespace MetalGear
                 IItem i2 = CurrentRoom.chest.RemoveItem(item); //remove item from room
                 if (i2 != null) 
                 {
-                    if (maxWeight - i2.weight > 0 && i2.value <= playerValue) //checks if item can be picked up and is less than weight
+                    if (maxWeight - i2.weight > 0 && i2.value <= snakeValue) //checks if item can be picked up and is less than weight
                     {
-                        Notification notification = new Notification("PlayerPickedUpItem", this);
+                        Notification notification = new Notification("snakePickedUpItem", this);
                         NotificationCenter.Instance.PostNotification(notification);
                         inventory.Add(i2.name, i2);
                         maxWeight = maxWeight - i2.weight; //subtract from max weight
-                        playerValue += i2.value; //adds value to player
+                        snakeValue += i2.value; //adds value to snake
 
                     }
                     else
@@ -263,13 +255,12 @@ namespace MetalGear
 
         public void Give(String item) // give blueFlame to monster
         {
-            if (inventory.ContainsKey(item) && CurrentRoom.Tag == "dungeon")
+            if (inventory.ContainsKey(item) && CurrentRoom.Tag == "on the main platform of Outer Heaven")
             {
-                Militant.Instance.containFlame = true; //monster has blueFlame
-                Notification notification = new Notification("PlayerGaveBlueFlame", this);
+                Militant.Instance.ContainsMasterKey = true; //monster has blueFlame
+                Militant.Instance.SpeakChest();
+                Notification notification = new Notification("snakeGaveMasterKey", this);
                 NotificationCenter.Instance.PostNotification(notification);
-                
-
             }
             else
             {
@@ -277,9 +268,28 @@ namespace MetalGear
             }
         }
 
-        public void Stats() //shows player stats
+        public void GiveMasterKey()
         {
-            Console.WriteLine("Player value:" + playerValue + "\n" + "available inventory weight: " + maxWeight);
+            Pickup("masterKey");
+        }
+
+        public void CheckforMasterKey()
+        {
+            if (Inventory.ContainsKey("researchKey") && Inventory.ContainsKey("barracksKey") && Inventory.ContainsKey("armsKey") && Inventory.ContainsKey("medicalKey") && CurrentRoom.Tag == "on the main platform of Outer Heaven")
+            {
+                OutputMessage("You have obtained all keys and made the Master Key!");
+                GiveMasterKey();
+                Militant.Instance.SpeakGive();
+                Inventory.Remove("researchKey");
+                Inventory.Remove("armsKey");
+                Inventory.Remove("barracksKey");
+                Inventory.Remove("medicalKey");
+            }
+        }
+
+        public void Stats() //shows snake stats
+        {
+            Console.WriteLine("snake value:" + snakeValue + "\n" + "available inventory weight: " + maxWeight);
 
             String itemList = "Items: ";
             foreach (IItem i in inventory.Values)
@@ -290,9 +300,6 @@ namespace MetalGear
             }
 
             Console.WriteLine(itemList);
-
-
         }
     }
-
 }

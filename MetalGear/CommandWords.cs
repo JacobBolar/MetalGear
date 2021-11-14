@@ -7,7 +7,8 @@ namespace MetalGear
     public class CommandWords
     {
         Dictionary<string, Command> commands;
-        private static Command[] commandArray = {  };
+        //NOTE BACK COMMAND IS NOT WORKING!!!!!!
+        private static Command[] commandArray = { new GoCommand(), new QuitCommand(), new BackCommand(), new PickupCommand(), new InspectCommand(), new StatsCommand(), new UnlockCommand(), new GiveCommand()};
 
         public CommandWords() : this(commandArray)
         {

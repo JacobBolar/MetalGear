@@ -103,18 +103,19 @@ namespace MetalGear
             NotificationCenter.Instance.AddObserver("snakeLeavingRoom", snakeLeavingRoom);
             // NotificationCenter.Instance.AddObserver("snakeBrokeIce",snakeBrokeIce);
             NotificationCenter.Instance.AddObserver("snakeUnlockedDoor", unlockDoor);
-            // NotificationCenter.Instance.AddObserver("snakeGaveBlueFlame", gaveBlueFlame);
+            NotificationCenter.Instance.AddObserver("snakeGaveMasterKey", gaveMasterKey);
 
         }
 
-        // public void gaveBlueFlame(Notification notification)
-        // {
-        //     Snake snake = (Snake)notification.Object;
-        //     Militant.Instance.containFlame = true; //monster has blueFlame
-        //     snake.CurrentRoom.chest.unlock();
-        // }
-        //
-        //
+        public void gaveMasterKey(Notification notification)
+        {
+            Snake snake = (Snake)notification.Object;
+            Militant.Instance.ContainsMasterKey = true; //monster has blueFlame
+            snake.CurrentRoom.chest.unlock();
+            Console.WriteLine("snake gave the master key to the militant");
+        }
+        
+        
         // public void snakeBrokeIce(Notification notification) //snake breaks ice to leave room
         // {
         //     Console.WriteLine("You have broken the ice");
@@ -135,7 +136,6 @@ namespace MetalGear
             {
                 Token = 0;
                 NotificationCenter.Instance.RemoveObserver("GameClockTick",TimedTrap); // remove observer form timetrap after snake leaves room
-             
             }
            
         }
@@ -199,25 +199,15 @@ namespace MetalGear
             }
             if(snake.CurrentRoom == dungeonRoom)
             {
-                Militant.Instance.speak();
+                Militant.Instance.SpeakDeny();
             }
-            
-
-
-            
-            
         }
-
-
+        
       
         public void unlockDoor(Notification notification) // unlock door notification
         {
             Snake snake = (Snake)notification.Object;
-
-            Console.WriteLine("snake unlocked Room Door");
-
-            
-            
+            Console.WriteLine("snake has unlocked the Door");
         }
 
         public void TimedTrap(Notification notification) //sets trap
@@ -253,10 +243,13 @@ namespace MetalGear
             roomList.Add(bigBossRoom);
             
             //create items
-            roomItem researchKey = new roomItem("researchKey", 2, true);
-            roomItem armsKey = new roomItem("bible", 2, false,8);
-            roomItem barracksKey = new roomItem("wine", 3, true,10);
-            roomItem medicalKey = new roomItem("cheese", 1, true,2);
+            Item researchKey = new Item("researchKey", 2, true, 50);
+            Item armsKey = new Item("armsKey", 2, true,8);
+            Item barracksKey = new Item("barracksKey", 3, true,10);
+            Item medicalKey = new Item("medicalKey", 1, true,2);
+            Item masterKey = new Item("masterKey", 30, true, 100);
+            Item bigBossKey = new Item("bigBossKey", 2, true, 500);
+            Item selfDestructDevice = new Item("selfDestructDevice", 10, true, 1000);
 
             //create chests and add items in chest
             ItemContainer researchChest = new ItemContainer("researchChest");
@@ -264,26 +257,32 @@ namespace MetalGear
             researchRoom.addItem(researchChest);
 
             ItemContainer armsChest = new ItemContainer("armsChest");
-            researchChest.AddItem(armsKey);
-            researchRoom.addItem(armsChest);
+            armsChest.AddItem(armsKey);
+            armsRoom.addItem(armsChest);
 
             ItemContainer barracksChest = new ItemContainer("barracksChest");
-            researchChest.AddItem(barracksKey);
-            researchRoom.addItem(barracksChest);
+            barracksChest.AddItem(barracksKey);
+            barracksRoom.addItem(barracksChest);
 
             ItemContainer medicalChest = new ItemContainer("medicalChest");
-            researchChest.AddItem(medicalKey);
-            researchRoom.addItem(medicalChest);
+            medicalChest.AddItem(medicalKey);
+            medicalBay.addItem(medicalChest);
 
+            ItemContainer entranceChest = new ItemContainer("entranceChest");
+            entranceChest.AddItem(masterKey);
+            entranceChest.AddItem(bigBossKey);
+            entranceChest.isLocked = true;
+            entrancePlatform.addItem(entranceChest);
+
+            ItemContainer bigBossChest = new ItemContainer("bigBossChest");
+            bigBossChest.AddItem(selfDestructDevice);
+            bigBossRoom.addItem(bigBossChest);
+            
             // create doors and sets exits for each room
-            Door door = Door.CreateDoor(entrancePlatform, bigBossRoom, "north", "south",false);
-
+            Door door = Door.CreateDoor(entrancePlatform, bigBossRoom, "north", "south",true);
             door = Door.CreateDoor(entrancePlatform, researchRoom, "west", "east",false);
-
             door = Door.CreateDoor(entrancePlatform, barracksRoom, "east", "west",false);
-
             door = Door.CreateDoor(researchRoom, medicalBay, "north", "south",false);
-
             door = Door.CreateDoor(barracksRoom, armsRoom, "north", "south",false);
 
             Entrance = entrancePlatform;

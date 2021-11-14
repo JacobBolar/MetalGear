@@ -32,6 +32,7 @@ namespace MetalGear
             while (!finished)
             {
                 Console.Write("\n>");
+                snake.CheckforMasterKey();
                 Command command = parser.ParseCommand(Console.ReadLine());
                 if (command == null)
                 {
@@ -41,7 +42,7 @@ namespace MetalGear
                 {
                     
                     finished = command.Execute(snake);
-                    if(snake.Inventory.ContainsKey("crown"))
+                    if(snake.Inventory.ContainsKey("selfDestructDevice"))
                     {
                         finished = true;
                     }
