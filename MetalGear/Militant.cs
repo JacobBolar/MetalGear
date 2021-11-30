@@ -36,7 +36,12 @@ namespace MetalGear
 
         public void SpeakChest()
         {
-            Console.WriteLine("Militant: You gave me the key.  I have unlocked the chest for you.  INSPECT the chest, PICKUP the key, and UNLOCK the door north to proceed.");
+            Console.WriteLine("Militant: You gave me the key.  I have unlocked the chest for you.  INSPECT the chest, PICKUP the key, and UNLOCK the door north to proceed, and DROP the keys back in the chest.  That key is too heavy for you to be carrying around.");
+        }
+
+        public void SpeakBigBoss()
+        {
+            Console.WriteLine("Big Boss: Snake! You weren't supposed to make it here!  Whatever you do, don't INSPECT that chest and PICKUP whatever is inside!");
         }
 
     }

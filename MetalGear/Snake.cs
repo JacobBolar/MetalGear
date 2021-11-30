@@ -142,7 +142,7 @@ namespace MetalGear
         }
 
 
-        /*public void drop(string item) //snake drops item
+        public void drop(string item) //snake drops item
         {
             if (inventory.ContainsKey(item)) //check if item is in inventory 
             {
@@ -158,7 +158,7 @@ namespace MetalGear
             {
                 Console.WriteLine("Item not in inventory");
             }
-        }*/
+        }
 
 
 
@@ -259,6 +259,7 @@ namespace MetalGear
             {
                 Militant.Instance.ContainsMasterKey = true; //monster has blueFlame
                 Militant.Instance.SpeakChest();
+                Inventory.Remove(item);
                 Notification notification = new Notification("snakeGaveMasterKey", this);
                 NotificationCenter.Instance.PostNotification(notification);
             }

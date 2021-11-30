@@ -17,16 +17,15 @@ namespace MetalGear
                 return _instance;
             }
         }
+        
         private int _trapTimeOut; //keeps count of trap time
         public  int TrapTimeOut
         {
             get { return _trapTimeOut; }
             private set { _trapTimeOut = value; }
         }
-
         
         private Room _entrance;
-
         public Room Entrance //set entrance
         {
             get
@@ -36,8 +35,6 @@ namespace MetalGear
 
             private set { _entrance = value; }
         }
-
-      
 
         private Room _trap; // trap room
         public Room Trap
@@ -87,6 +84,13 @@ namespace MetalGear
             get { return _dungeon; }
             set { _dungeon = value; }
         }
+
+        private Room _bigBossRoom;
+        public Room BigBossRoom
+        {
+            get { return _bigBossRoom; }
+            private set { _bigBossRoom = value; }
+        }
         
         private List<Room> roomList = new List<Room>(); // room list to get random room
 
@@ -132,11 +136,11 @@ namespace MetalGear
         {
             Snake snake = (Snake)notification.Object;
             Previous = snake.CurrentRoom;
-            if(Previous == _storedTrap && TrapTimeOut > 0 )
-            {
-                Token = 0;
-                NotificationCenter.Instance.RemoveObserver("GameClockTick",TimedTrap); // remove observer form timetrap after snake leaves room
-            }
+            // if(Previous == _storedTrap && TrapTimeOut > 0 )
+            // {
+            //     Token = 0;
+            //     NotificationCenter.Instance.RemoveObserver("GameClockTick",TimedTrap); // remove observer form timetrap after snake leaves room
+            // }
            
         }
 
@@ -200,6 +204,11 @@ namespace MetalGear
             if(snake.CurrentRoom == dungeonRoom)
             {
                 Militant.Instance.SpeakDeny();
+            }
+
+            if (snake.CurrentRoom == _bigBossRoom)
+            {
+                Militant.Instance.SpeakBigBoss();
             }
         }
         
@@ -286,13 +295,14 @@ namespace MetalGear
             door = Door.CreateDoor(barracksRoom, armsRoom, "north", "south",false);
 
             Entrance = entrancePlatform;
+            BigBossRoom = bigBossRoom;
             // _storedTrap = iceHouse;
             // _trap = null;
             // Token = 0; //takes count of if the trap is still going
             // Transporter = undercroft; //transporter room
             // tradeRoom = TradeRoom; 
             // dungeonRoom = dungeon;
-           
+
         }
 
     }

@@ -79,7 +79,9 @@ namespace MetalGear
 
         public string Goodbye()
         {
-            return "\nThank you for playing, Goodbye. \n";
+            return "\nBOOOOOOOOOM!!" +
+                   "\nSnake takes the self destruct button and blows up Metal Gear with Big Boss inside!!" +
+                   "\nSnake:  Looks like Big Boss wanted me to fail this mission so he could have his own secret Metal Gear... good thing I destroyed it! \n";
         }
     }
 }
