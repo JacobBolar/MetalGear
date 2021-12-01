@@ -236,7 +236,7 @@ namespace MetalGear
                         NotificationCenter.Instance.PostNotification(notification);
                         inventory.Add(i2.name, i2);
                         maxWeight = maxWeight - i2.weight; //subtract from max weight
-                        snakeValue += i2.value; //adds value to snake
+                        snakeValue -= i2.value; //adds value to snake
 
                     }
                     else
@@ -259,7 +259,6 @@ namespace MetalGear
             {
                 Militant.Instance.ContainsMasterKey = true; //monster has blueFlame
                 Militant.Instance.SpeakChest();
-                Inventory.Remove(item);
                 Notification notification = new Notification("snakeGaveMasterKey", this);
                 NotificationCenter.Instance.PostNotification(notification);
             }

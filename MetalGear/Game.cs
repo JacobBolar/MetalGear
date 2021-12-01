@@ -25,9 +25,7 @@ namespace MetalGear
         public void Play()
         {
 
-            // Enter the main command loop.  Here we repeatedly read commands and
-            // execute them until the game is over.
-
+            // Main Game Loop. Finished when self destruct device is picked up.
             bool finished = false;
             while (!finished)
             {

@@ -8,7 +8,7 @@ namespace MetalGear
     {
         Dictionary<string, Command> commands;
         //NOTE BACK COMMAND IS NOT WORKING!!!!!!
-        private static Command[] commandArray = { new GoCommand(), new QuitCommand(), new BackCommand(), new PickupCommand(), new InspectCommand(), new StatsCommand(), new UnlockCommand(), new GiveCommand(), new DropCommand()};
+        private static Command[] commandArray = { new GoCommand(), new QuitCommand(), new BackCommand(), new PickupCommand(), new InspectCommand(), new StatsCommand(), new UnlockCommand(), new GiveCommand(), new DropCommand(), new BuyCommand(), new SellCommand()};
 
         public CommandWords() : this(commandArray)
         {

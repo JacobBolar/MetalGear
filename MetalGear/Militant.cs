@@ -11,14 +11,15 @@ namespace MetalGear
             get { return _containsMasterKey; }
             set { _containsMasterKey = value; }
         }
-
-        public static Militant Instance  //singleton pattern
+        
+        //Singleton Design Pattern
+        public static Militant Instance 
         {
             get
             {
-                if (_instance == null) // if no instance create gamworld instance
+                if (_instance == null)
                 {
-                    _instance = new Militant(); // create gameworld
+                    _instance = new Militant();
                 }
                 return _instance;
             }
@@ -36,7 +37,8 @@ namespace MetalGear
 
         public void SpeakChest()
         {
-            Console.WriteLine("Militant: You gave me the key.  I have unlocked the chest for you.  INSPECT the chest, PICKUP the key, and UNLOCK the door north to proceed, and DROP the keys back in the chest.  That key is too heavy for you to be carrying around.");
+            Console.WriteLine("Militant: You gave me the key.  I have unlocked the chest for you.  INSPECT the chest, PICKUP the key, and UNLOCK the door north to proceed, and DROP the keys back in the chest.  That key is too heavy for you to be carrying around.  Also, you may go to the trade room" +
+                              "north of the arms room and sell it there.  Feel free to buy it back if you want also.");
         }
 
         public void SpeakBigBoss()

@@ -4,6 +4,7 @@ using System;
 
 namespace MetalGear
 {
+    //Command Design Pattern
     public abstract class Command
     {
         private string _name;

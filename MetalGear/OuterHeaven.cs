@@ -72,7 +72,7 @@ namespace MetalGear
         }
 
         private Room _tradeRoom; // trade room
-        public Room tradeRoom
+        public Room TradeRoom
         {
             get { return _tradeRoom; }
             set { _tradeRoom = value; }
@@ -190,14 +190,20 @@ namespace MetalGear
                     //freezeTime = 3;
                 }
             }
+            //Transporter room.  If it lands on BigBossRoom, should randomise again.
             if(snake.CurrentRoom == Transporter)
             {
                 Console.WriteLine("You have entered the transporter room");
                 Random random = new Random();
                 int r = random.Next(roomList.Count); 
-                snake.CurrentRoom = roomList[r]; // select random room from list
+                snake.CurrentRoom = roomList[r];
+                while (snake.CurrentRoom == BigBossRoom)
+                {
+                    int a = random.Next(roomList.Count); 
+                    snake.CurrentRoom = roomList[r];
+                }
             }
-            if(snake.CurrentRoom == tradeRoom)
+            if(snake.CurrentRoom == TradeRoom)
             {
                 Console.WriteLine("You may buy and sell items here");
             }
@@ -242,6 +248,8 @@ namespace MetalGear
             Room barracksRoom = new Room("barracks room");
             Room medicalBay = new Room("medical bay");
             Room bigBossRoom = new Room("Big boss room");
+            Room transportRoom = new Room("Transport Room");
+            Room tradeRoom = new Room("Trade Room");
 
             //add all rooms to list for transporter 
             roomList.Add(entrancePlatform);
@@ -249,6 +257,8 @@ namespace MetalGear
             roomList.Add(armsRoom);
             roomList.Add(barracksRoom);
             roomList.Add(medicalBay);
+            roomList.Add(transportRoom);
+            roomList.Add(tradeRoom);
             roomList.Add(bigBossRoom);
             
             //create items
@@ -256,7 +266,7 @@ namespace MetalGear
             Item armsKey = new Item("armsKey", 2, true,8);
             Item barracksKey = new Item("barracksKey", 3, true,10);
             Item medicalKey = new Item("medicalKey", 1, true,2);
-            Item masterKey = new Item("masterKey", 30, true, 100);
+            Item masterKey = new Item("masterKey", 40, true, 100);
             Item bigBossKey = new Item("bigBossKey", 2, true, 500);
             Item selfDestructDevice = new Item("selfDestructDevice", 10, true, 1000);
 
@@ -289,18 +299,20 @@ namespace MetalGear
             
             // create doors and sets exits for each room
             Door door = Door.CreateDoor(entrancePlatform, bigBossRoom, "north", "south",true);
+            door = Door.CreateDoor(entrancePlatform, transportRoom, "south", "north",false);
             door = Door.CreateDoor(entrancePlatform, researchRoom, "west", "east",false);
             door = Door.CreateDoor(entrancePlatform, barracksRoom, "east", "west",false);
             door = Door.CreateDoor(researchRoom, medicalBay, "north", "south",false);
             door = Door.CreateDoor(barracksRoom, armsRoom, "north", "south",false);
+            door = Door.CreateDoor(armsRoom, tradeRoom, "north", "south",false);
 
             Entrance = entrancePlatform;
             BigBossRoom = bigBossRoom;
             // _storedTrap = iceHouse;
             // _trap = null;
             // Token = 0; //takes count of if the trap is still going
-            // Transporter = undercroft; //transporter room
-            // tradeRoom = TradeRoom; 
+            Transporter = transportRoom; //transporter room
+            TradeRoom = tradeRoom; 
             // dungeonRoom = dungeon;
 
         }

@@ -3,7 +3,8 @@ using System.Collections.Generic;
 
 namespace MetalGear
 {
-    public class ItemContainer : IItem // hierarchy design pattern
+    //Hierarchy/Container Design Pattern
+    public class ItemContainer : IItem 
     {
         private Dictionary<String, IItem> _chest;
         public String name { get; set; }
@@ -13,7 +14,8 @@ namespace MetalGear
             get
             {
                 float containedWeight = 0;
-                foreach (IItem item in _chest.Values) // add all weights together 
+                //Adding all weights together
+                foreach (IItem item in _chest.Values) 
                 {
                     containedWeight += item.weight;
                 }

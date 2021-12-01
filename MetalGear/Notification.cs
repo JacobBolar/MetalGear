@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace MetalGear
 {
+    //Notification Design Pattern
     public class Notification
     {
         public String Name { get; set; }
